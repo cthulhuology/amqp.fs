@@ -154,17 +154,25 @@ create tx.rollback-ok 90 , 31 ,
 : field-value-none, ( -- ) [char] V c, ;
 
 : frame-properties, ( length channel -- ) short-uint, long-uint, ;
-: method-payload, ( method-id class-id  ) short-uint, short-uint, ;	\ fields follows
-
 : frame-end, $CE c, ;
 
+\ method frames take a class-id, method-id and a list of fields
+\ | class-id | method-id | arguments...
+: method-payload, ( method-id class-id  ) short-uint, short-uint, ;	\ fields follows
+
+
+\ class-id is the method frame class-id 
+\ | class-id | weight | body size | property flags | property list...
 : content-class, ( class -- ) c, ;
 : content-weight, ( -- ) 0 c, ;
 : content-body-size, ( u -- ) longlong-uint, ;
 : property-flags, ( flags -- ) short-uint, ;		\ 16 bits of flags
 
+\ header payloads
 : header-payload, content-class, content-weight, content-body-size, property-flags, ; \ property-list follows 
 : content-header, frame-properties, header-payload, frame-end, ;
+
+\ content payloads
 : content-body, 3 c, frame-properties, ; \ body-payload octets, frame-end, 
 
 : content, 2 c, content-header, content-body, ;
@@ -172,7 +180,7 @@ create tx.rollback-ok 90 , 31 ,
 
 : method-frame ( length channel -- ) 1 c, frame-properties, ;	\ method-payload frame-end ; 
 
-
+\ heartbeats must be channel 0
 : heartbeat 8 c, 0 c, 0 c, frame-end, ;
 
 
