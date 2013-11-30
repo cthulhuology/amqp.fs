@@ -174,9 +174,7 @@ create tx.rollback-ok 90 , 31 ,
 
 \ content payloads
 : content-body, 3 c, frame-properties, ; \ body-payload octets, frame-end, 
-
 : content, 2 c, content-header, content-body, ;
-
 
 : method-frame ( length channel -- ) 1 c, frame-properties, ;	\ method-payload frame-end ; 
 
